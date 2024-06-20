@@ -1,0 +1,176 @@
+<meta charset="utf-8">
+
+<title>逝光-llbc</title> 
+
+<style>
+
+#封面
+{
+height:100vh;
+background-image:url("bg2.PNG");
+background-repeat:no-repeat;
+background-size: cover;
+}
+
+#遊戲頁面
+{
+height:100vh;
+background-image:url("bg1.PNG");
+background-repeat:no-repeat;
+background-size: cover;
+}
+
+#遊戲說明頁面 
+{
+height:100vh;
+background-image:url("bg1.PNG");
+background-repeat:no-repeat;
+background-size: cover;
+}
+
+#選擇關卡頁面
+{
+height:100vh;
+background-image:url("bg1.PNG");
+background-repeat:no-repeat;
+background-size: cover;
+}
+
+#進入遊戲
+{
+font-size: 300%;
+position: absolute;
+top: 60%;
+left: 70%;
+transform: translate(-50%,-50%);
+border: 5px solid #ddd;
+padding: 3px;
+}
+
+
+#遊戲說明按鍵
+{
+font-size: 200%;
+position: absolute;
+top: 155%;
+left: 31%;
+transform: translate(-50%,-50%);
+border: 5px solid #ddd;
+padding: 3px;
+}
+
+#選擇關卡按鍵
+{
+font-size: 200%;
+position: absolute;
+top: 155%;
+left:66%;
+transform: translate(-50%,-50%);
+border: 5px solid #ddd;
+padding: 3px;
+}
+
+#back1
+{
+font-size: 200%;
+position: absolute;
+top: 296%;
+left: 94%;
+transform: translate(-50%,-50%);
+border: 5px solid #ddd;
+padding: 3px;
+}
+
+a:link
+{
+color: white;  
+}
+
+a:visited
+{
+color: white;
+}
+
+#rule
+{
+position: absolute;
+top: 225%;
+left: 5%;
+right: 10%;
+font-size: 180%;
+color: white;
+}
+
+#亮燈 img
+{
+position: absolute;
+top: 236%;
+left: 11%;
+}
+
+#暗燈 img
+{
+position: absolute;
+top: 241%;
+left: 11%;
+}
+
+#gkword
+{
+color: white;
+}
+
+</style>
+
+<body>
+
+<div id="封面">
+
+    <div id="進入遊戲">
+         <a href=#遊戲頁面>進入遊戲</a>
+    </div>
+
+</div>
+
+<div id="遊戲頁面">
+
+    <div id="遊戲說明按鍵">
+        <a href=#遊戲說明頁面>遊戲說明</a> 
+    </div>
+
+    <div id="選擇關卡按鍵">
+        <a href="選關頁面.html">選擇關卡</a>
+    </div>
+
+</div>
+
+<div id="遊戲說明頁面">
+
+    <div id="亮燈">
+        <img src="llpic.png" 
+        width="4%"
+        height="5%">
+    </div>
+
+    <div id="暗燈">
+        <img src="ddpic.png" 
+        width="4%"
+        height="5%">
+    </div>
+
+    <span id="rule">
+
+    	說明：<br>進入關卡後會有數個燈依序排列，這些燈不是開的就是關的<br>亮燈為<br>暗燈為<br>玩家需要使得全部的燈關上才獲勝<br>
+
+        <br>規則：<br>在遊戲中相鄰的燈會相互影響，當打開或關上某一盞燈則左右的燈也會變化 <br>例如2號位的燈為關，3號位的燈為開，4號位的燈為關<br>當玩家關了3號位的燈時，2號和4號位的燈就開了
+
+    	</span>
+
+    <div id="back1">
+        <a href="#遊戲頁面">返回
+        </a>
+    </div>
+
+</div>
+
+</body>
