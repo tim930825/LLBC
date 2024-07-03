@@ -38,8 +38,8 @@ function overclick() {
 function creatmap(content) {
     let map = zero_matrix(content[0][0], content[0][1]);
     content[1].forEach(point => {
-        if (point[0] == "c") {map[point[1]].fill("Na");}
-        else if (point[0] == "r") {map.forEach(columns => {columns[point[1]] = "Na"});}
+        if (point[0] == "r") {map[point[1]].fill("Na");}
+        else if (point[0] == "c") {map.forEach(columns => {columns[point[1]] = "Na"});}
         else {map[point[0]][point[1]] = "Na";}
     });
     content[2].forEach(point => {map = turnlight(map, content, point);});
