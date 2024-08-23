@@ -3,10 +3,10 @@ const LN = ({
     2: [[5, 3], [[1, 2]], [[1, 1]], [[0, 0], [-1, 0], [1, 0]], 1, [[0, 0], [0, 1]]],
 });//[rows, columns], cancelled_blocks, prerun, rules, per_switch, fixeds
 
-const zero_matrix = (rows, columns) => new Array(columns).fill(0).map((o, i) => new Array(rows).fill(0));
+const zero_matrix = (rows, columns) => new Array(columns).fill(0).map((j, i) => new Array(rows).fill(0));
 
-const canvasWidth = window.innerWidth*0.9;
-const canvasHeight = window.innerHeight*0.9;
+var canvasWidth = window.innerWidth*0.9;
+var canvasHeight = window.innerHeight*0.9;
 var gamecanvas = document.getElementById("game");
 var gamectx = gamecanvas.getContext("2d");
 var level = 1;
@@ -16,7 +16,6 @@ var gamePath = "menu";
 var game_buttons = [];
 var pushed = "Na";
 var levelmap = [];
-var y = 0;
 
 class menuButtons{
     constructor(number) {
@@ -26,7 +25,6 @@ class menuButtons{
         this.width = canvasWidth*0.15;
         this.height = canvasHeight*0.18;
         this.index = 0;
-        this.run();
     }
     run() {
         if (pushed == this.number) {this.index = 5;}
@@ -72,24 +70,26 @@ class gameButtons{
             this.light = levelmap[this.position[1]][this.position[0]];
             if (fixeds.some(point => this.position.every((value, i) => value === point[i]))) {this.fixed = true;}
             else {this.fixed = false;}
-            let buttonRestriction = [0.1, 0.1, 0.8, 0.8];
-            if (CRs[0] > CRs[1]) {buttonRestriction = [0.1, 0.5 - CRs[1]/CRs[0]*0.5,  0.8,  CRs[1]/CRs[0]*0.8];}
-            else if (CRs[0] < CRs[1]) {buttonRestriction = [0.5 - CRs[0]/CRs[1]*0.5, 0.1, CRs[0]/CRs[1]*0.8, 0.8];}
-            if (canvasWidth > canvasHeight) {
-                this.x = (canvasWidth - canvasHeight)*0.5 + canvasHeight/CRs[0]*(this.position[0] + buttonRestriction[0]);
-                this.y = canvasHeight/CRs[1]*(this.position[1] + buttonRestriction[1]);
-                this.width = canvasHeight/CRs[0]*buttonRestriction[2];
-                this.height = canvasHeight/CRs[1]*buttonRestriction[3];
-            }
-            else {
-                this.x = canvasWidth/CRs[0]*(this.position[0] + buttonRestriction[0]);
-                this.y = (canvasHeight - canvasWidth)*0.5 + canvasWidth/CRs[1]*(this.position[1] + buttonRestriction[1]);
-                this.width = canvasWidth/CRs[0]*buttonRestriction[2];
-                this.height = canvasWidth/CRs[1]*buttonRestriction[3];
-            }
+            this.resize(CRs);
         }
         this.index = 0;
-        this.run();
+    }
+    resize(CRs) {
+        let buttonRestriction = [0.1, 0.1, 0.8, 0.8];
+        if (CRs[0] > CRs[1]) {buttonRestriction = [0.1, 0.5 - CRs[1]/CRs[0]*0.5,  0.8,  CRs[1]/CRs[0]*0.8];}
+        else if (CRs[0] < CRs[1]) {buttonRestriction = [0.5 - CRs[0]/CRs[1]*0.5, 0.1, CRs[0]/CRs[1]*0.8, 0.8];}
+        if (canvasWidth > canvasHeight) {
+            this.x = (canvasWidth - canvasHeight)*0.5 + canvasHeight/CRs[0]*(this.position[0] + buttonRestriction[0]);
+            this.y = canvasHeight/CRs[1]*(this.position[1] + buttonRestriction[1]);
+            this.width = canvasHeight/CRs[0]*buttonRestriction[2];
+            this.height = canvasHeight/CRs[1]*buttonRestriction[3];
+        }
+        else {
+            this.x = canvasWidth/CRs[0]*(this.position[0] + buttonRestriction[0]);
+            this.y = (canvasHeight - canvasWidth)*0.5 + canvasWidth/CRs[1]*(this.position[1] + buttonRestriction[1]);
+            this.width = canvasWidth/CRs[0]*buttonRestriction[2];
+            this.height = canvasWidth/CRs[1]*buttonRestriction[3];
+        }
     }
     run() {
         if (this.light !== levelmap[this.position[1]][this.position[0]]) {
@@ -204,6 +204,17 @@ function resizeCanvas() {
     gamecanvas.width = canvasWidth;
     gamecanvas.height = c_H;
 }
+
+window.addEventListener("resize", function() {
+    canvasWidth = window.innerWidth*0.9;
+    canvasHeight = window.innerHeight*0.9;
+    resizeCanvas();
+    if (gamePath == "menu") {
+        c_H = Math.max(canvasHeight*(Math.floor((maxlevel-1)/5)*0.22+0.4), canvasHeight);
+        gamecanvas.height = c_H;
+    }
+    else {game_buttons.forEach(buttons => {buttons.resize(LN[level][0]);});}
+})
 
 function runGame() {
     gamectx.clearRect(0, 0, canvasWidth, c_H);
