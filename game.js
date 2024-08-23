@@ -74,17 +74,19 @@ class gameButtons{
             else {this.fixed = false;}
             let buttonRestriction = [0.1, 0.1, 0.8, 0.8];
             if (CRs[0] > CRs[1]) {buttonRestriction = [0.1, 0.5 - CRs[1]/CRs[0]*0.5,  0.8,  CRs[1]/CRs[0]*0.8];}
-            else {buttonRestriction = [0.5 - CRs[0]/CRs[1]*0.5, 0.1, CRs[0]/CRs[1]*0.8, 0.8];}
+            else if (CRs[0] < CRs[1]) {buttonRestriction = [0.5 - CRs[0]/CRs[1]*0.5, 0.1, CRs[0]/CRs[1]*0.8, 0.8];}
             if (canvasWidth > canvasHeight) {
                 this.x = (canvasWidth - canvasHeight)*0.5 + canvasHeight/CRs[0]*(this.position[0] + buttonRestriction[0]);
                 this.y = canvasHeight/CRs[1]*(this.position[1] + buttonRestriction[1]);
+                this.width = canvasHeight/CRs[0]*buttonRestriction[2];
+                this.height = canvasHeight/CRs[1]*buttonRestriction[3];
             }
             else {
-                this.x = (canvasHeight - canvasWidth)*0.5 + canvasWidth/CRs[0]*(this.position[0] + buttonRestriction[0]);
-                this.y = canvasWidth/CRs[1]*(this.position[1] + buttonRestriction[1]);
+                this.x = canvasWidth/CRs[0]*(this.position[0] + buttonRestriction[0]);
+                this.y = (canvasHeight - canvasWidth)*0.5 + canvasWidth/CRs[1]*(this.position[1] + buttonRestriction[1]);
+                this.width = canvasWidth/CRs[0]*buttonRestriction[2];
+                this.height = canvasWidth/CRs[1]*buttonRestriction[3];
             }
-            this.width = canvasHeight/CRs[0]*buttonRestriction[2];
-            this.height = canvasHeight/CRs[1]*buttonRestriction[3];
         }
         this.index = 0;
         this.run();
@@ -169,8 +171,17 @@ function overcheck() {
         if ((level == maxlevel)&&(maxlevel < Object.getOwnPropertyNames(LN).length)) {maxlevel ++;}
         window.localStorage.setItem("maxlevel", maxlevel);
         setTimeout(function() {
-            if (confirm("n") == true) {
-            location.href = "";
+            if (level < maxlevel) {
+                if (confirm("Level "+level+" CLEAR\nMove on to the next level?") == true) {
+                    level ++;
+                    switch_to_level();
+                }
+                else {switch_to_menu();}
+            }
+            else {
+                alert("Level "+level+" Clear");
+                switch_to_menu();
+
             }
         }, 10);
     }
@@ -200,6 +211,23 @@ function runGame() {
     gamectx.fillStyle = "#456789";
     gamectx.fillRect(0, 0, canvasWidth, c_H);
     gamectx.closePath();
+    if (gamePath == "level") {
+        let text = "Level "+level;
+        gamectx.beginPath();
+        gamectx.fillStyle = "#000";
+        gamectx.textAlign = "center";
+        if (canvasWidth > canvasHeight) {
+            let difference = canvasWidth - canvasHeight;
+            gamectx.font = difference*1.5/(text.length+10)+"px Arial";
+            gamectx.fillText(text, difference*0.25, canvasHeight*0.15);
+        }
+        else {
+            let difference = canvasHeight - canvasWidth;
+            gamectx.font = difference*4/(text.length+10)+"px Arial";
+            gamectx.fillText(text, canvasWidth*0.5, difference*0.4);
+        }
+        gamectx.closePath();
+    }
     game_buttons.forEach(buttons => {buttons.run();});
     overcheck();
     setTimeout(function() {runGame()}, 10);
@@ -210,6 +238,7 @@ function switch_to_menu() {
     c_H = Math.max(canvasHeight*(Math.floor((maxlevel-1)/5)*0.22+0.4), canvasHeight);
     gamecanvas.height = c_H;
     gamePath = "menu";
+    pushed = "Na";
     game_buttons = [];
     for (i = 1; i <= maxlevel; i++) {game_buttons.push(new menuButtons(i));}
 }
@@ -217,6 +246,7 @@ function switch_to_menu() {
 function switch_to_level() {
     resizeCanvas();
     gamePath = "level";
+    pushed = "Na";
     game_buttons = [];
     levelmap = creatmap(LN[level]);
     let CRs = LN[level][0];
